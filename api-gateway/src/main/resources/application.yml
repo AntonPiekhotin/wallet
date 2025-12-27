@@ -5,6 +5,9 @@ spring:
   application:
     name: api-gateway
   cloud:
+    loadbalancer:
+      cache:
+        ttl: 5s
     gateway:
       discovery:
         locator:
@@ -12,5 +15,13 @@ spring:
 
 eureka:
   client:
+    registry-fetch-interval-seconds: 5
     service-url:
       defaultZone: http://localhost:8761/eureka/
+jwt:
+  secret: 'secretKeyForWALLETPETFAJFASLDKJFLSAKDJFASLDKJFASLDKJFAJFAKJF'
+
+logging:
+  level:
+    root: debug
+    web: debug

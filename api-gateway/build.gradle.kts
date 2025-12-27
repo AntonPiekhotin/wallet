@@ -28,8 +28,6 @@ repositories {
 extra["springCloudVersion"] = "2025.1.0"
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
@@ -45,6 +43,10 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:5.0.0")
+
+    implementation("io.jsonwebtoken:jjwt-api:0.10.8")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.10.8")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.10.8")
 }
 
 dependencyManagement {
