@@ -2,29 +2,40 @@ package com.tony.apigateway.filter
 
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
+import java.nio.charset.StandardCharsets
 import java.security.Key
 import java.util.Date
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
-class JwtUtil(
-    @Value("\${jwt.secret}")
-    secret: String
-) {
+class JwtUtil {
+    @Value($$"${jwt.secret}")
+    private val secret: String? = null
 
-    private val key: Key =
-        Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret))
+    private val signingKey: Key
+        get() = Keys.hmacShaKeyFor(secret?.toByteArray(StandardCharsets.UTF_8))
 
-    fun extractAllClaimsFromToken(token: String): Claims =
+    fun extractUserId(token: String?): String =
+        extractAllClaimsFromToken(token).get("userId", String::class.java)
+
+    fun extractRoles(token: String?): String =
+        extractAllClaimsFromToken(token).get("roles", String::class.java)
+
+    fun extractEmail(token: String?): String =
+        extractAllClaimsFromToken(token).subject
+
+    fun isInvalid(token: String?): Boolean =
+        isTokenExpired(token)
+
+    private fun isTokenExpired(token: String?): Boolean =
+        extractAllClaimsFromToken(token).expiration.before(Date())
+
+    fun extractAllClaimsFromToken(token: String?): Claims =
         Jwts.parser()
-            .setSigningKey(key)
-            .parseClaimsJws(token)
-            .body
-
-    fun isExpired(token: String): Boolean = extractAllClaimsFromToken(token).expiration.before(Date())
-
-    fun isInvalid(token: String): Boolean = isExpired(token)
+            .setSigningKey(signingKey)
+            .build()
+            .parseSignedClaims(token)
+            .getPayload()
 }
