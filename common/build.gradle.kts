@@ -14,6 +14,10 @@ kotlin {
     jvmToolchain(21)
 }
 
+dependencies {
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.18.3")
+}
+
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
