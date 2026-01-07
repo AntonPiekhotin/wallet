@@ -22,7 +22,6 @@ class ApiGatewayConfig(
         builder.routes()
             .route("auth") {
                 it.path("/api/v1/auth/**")
-                    .filters { f -> f.filter(filter) }
                     .uri("lb://auth")
             }
             .route("wallet") {
