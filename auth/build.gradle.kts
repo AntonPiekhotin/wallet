@@ -27,8 +27,9 @@ repositories {
 }
 
 dependencies {
-//    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("org.keycloak:keycloak-admin-client:26.0.8")
+//    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
@@ -41,8 +42,10 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
+    implementation("org.keycloak:keycloak-admin-client:24.0.5")
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:5.0.0")
+
+    implementation("com.tony.mywallet:common:1.0")
 }
 
 kotlin {
