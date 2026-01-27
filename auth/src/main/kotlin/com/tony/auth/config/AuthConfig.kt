@@ -12,10 +12,10 @@ class KeycloakConfig {
     @Bean
     fun keycloak(): Keycloak = KeycloakBuilder.builder()
         .serverUrl("http://localhost:8081") //todo
-        .realm("master")
+        .realm("wallet-realm")
         .username("admin")
         .password("admin")
-        .clientId("admin-cli")
+        .clientId("wallet-backend")
         .build()
 
     @Bean
