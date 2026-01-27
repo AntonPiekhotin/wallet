@@ -24,10 +24,12 @@ configurations {
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.keycloak:keycloak-admin-client:26.0.8")
 //    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
