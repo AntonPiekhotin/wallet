@@ -7,7 +7,5 @@ data class KeycloakProperties(
     val url: String,
     val realm: String,
     val clientId: String,
-    val clientSecret: String,
-    val adminUsername: String,
-    val adminPassword: String
+    val clientSecret: String
 )

@@ -3,18 +3,13 @@ package com.tony.auth.service
 import com.tony.auth.model.LoginRequest
 import com.tony.auth.model.RefreshRequest
 import com.tony.auth.model.RegisterRequest
-import model.exception.MyWalletException
-import org.keycloak.admin.client.CreatedResponseUtil
-import org.keycloak.admin.client.Keycloak
-import org.keycloak.representations.idm.CredentialRepresentation
-import org.keycloak.representations.idm.UserRepresentation
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 
 @Service
 class AuthService(
     private val oidc: KeycloakOidcClient,
-    private val admin: KeycloakAdminClient
+    private val keycloakService: KeycloakService
 ) {
 
     fun login(req: LoginRequest) =
@@ -27,5 +22,5 @@ class AuthService(
         oidc.logout(req.refreshToken)
 
     fun register(req: RegisterRequest): Mono<Void> =
-        Mono.fromRunnable { admin.registerUser(req) }
+        Mono.fromRunnable { keycloakService.registerUser(req) }
 }

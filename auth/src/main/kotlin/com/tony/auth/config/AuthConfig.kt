@@ -1,5 +1,7 @@
 package com.tony.auth.config
 
+import com.tony.auth.util.KeycloakProperties
+import org.keycloak.OAuth2Constants
 import org.keycloak.admin.client.Keycloak
 import org.keycloak.admin.client.KeycloakBuilder
 import org.springframework.context.annotation.Bean
@@ -7,21 +9,24 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.web.reactive.function.client.WebClient
 
 @Configuration
-class KeycloakConfig {
+class KeycloakConfig(
+    private val props: KeycloakProperties,
+) {
 
     @Bean
-    fun keycloak(): Keycloak = KeycloakBuilder.builder()
-        .serverUrl("http://localhost:8081") //todo
-        .realm("wallet-realm")
-        .username("admin")
-        .password("admin")
-        .clientId("wallet-backend")
-        .build()
-
-    @Bean
-    fun webClient(): WebClient {
-        return WebClient.builder()
-            .baseUrl("http://localhost:8081") ///todo
+    fun keycloak(): Keycloak {
+        return KeycloakBuilder.builder()
+            .serverUrl(props.url)
+            .realm(props.realm)
+            .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
+            .clientId(props.clientId)
+            .clientSecret(props.clientSecret)
             .build()
     }
+
+    @Bean
+    fun webClient(): WebClient =
+        WebClient.builder()
+            .baseUrl(props.url)
+            .build()
 }
