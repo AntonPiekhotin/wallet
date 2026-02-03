@@ -27,4 +27,3 @@ logging:
     org.apache.http: DEBUG
     org.apache.http.wire: TRACE
     web: debug
-
