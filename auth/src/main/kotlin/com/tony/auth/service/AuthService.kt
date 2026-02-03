@@ -8,19 +8,18 @@ import reactor.core.publisher.Mono
 
 @Service
 class AuthService(
-    private val oidc: KeycloakOidcClient,
     private val keycloakService: KeycloakService
 ) {
 
-    fun login(req: LoginRequest) =
-        oidc.login(req.email, req.password)
+    fun login(request: LoginRequest) =
+        keycloakService.login(request)
 
-    fun refresh(req: RefreshRequest) =
-        oidc.refresh(req.refreshToken)
+    fun refresh(request: RefreshRequest) =
+        keycloakService.refresh(request.refreshToken)
 
-    fun logout(req: RefreshRequest) =
-        oidc.logout(req.refreshToken)
+    fun logout(request: RefreshRequest) =
+        keycloakService.logout(request.refreshToken)
 
-    fun register(req: RegisterRequest): Mono<Void> =
-        Mono.fromRunnable { keycloakService.registerUser(req) }
+    fun register(request: RegisterRequest): Mono<Void> =
+        Mono.fromRunnable { keycloakService.registerUser(request) }
 }
