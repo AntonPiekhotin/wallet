@@ -29,5 +29,10 @@ class ApiGatewayConfig(
                     .filters { f -> f.filter(filter) }
                     .uri("lb://wallet")
             }
+            .route("user") {
+                it.path("/api/v1/user/**")
+                    .filters { f -> f.filter(filter) }
+                    .uri("lb://user")
+            }
             .build()
 }
