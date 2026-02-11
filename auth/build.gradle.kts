@@ -48,6 +48,8 @@ dependencies {
     implementation("org.keycloak:keycloak-admin-client:24.0.5")
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:5.0.0")
 
+    implementation("org.springframework.kafka:spring-kafka")
+
     implementation("com.tony.mywallet:common:1.0")
 }
 

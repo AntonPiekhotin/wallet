@@ -1,8 +1,8 @@
 package com.tony.auth.exception
 
 import java.util.Arrays
-import model.dto.ResponseErrorDto
-import model.exception.MyWalletException
+import com.tony.common.model.dto.ResponseErrorDto
+import com.tony.common.exception.MyWalletException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice

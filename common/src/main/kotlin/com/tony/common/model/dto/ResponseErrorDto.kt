@@ -1,4 +1,4 @@
-package model.dto
+package com.tony.common.model.dto
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import java.time.LocalDateTime

@@ -1,7 +1,7 @@
 package com.tony.apigateway.filter
 
 import java.nio.charset.StandardCharsets
-import model.constant.CustomHeaders
+import com.tony.common.model.constant.CustomHeaders
 import org.springframework.cloud.context.config.annotation.RefreshScope
 import org.springframework.cloud.gateway.filter.GatewayFilter
 import org.springframework.cloud.gateway.filter.GatewayFilterChain

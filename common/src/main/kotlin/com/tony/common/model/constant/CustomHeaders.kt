@@ -1,4 +1,4 @@
-package model.constant
+package com.tony.common.model.constant
 
 /**
  * Custom HTTP headers used in the application.

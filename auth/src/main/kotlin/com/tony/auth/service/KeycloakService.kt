@@ -4,9 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.tony.auth.model.LoginRequest
 import com.tony.auth.model.RegisterRequest
 import com.tony.auth.model.TokenResponse
+import com.tony.auth.output.event.AuthEventProducer
 import com.tony.auth.util.KeycloakProperties
 import com.tony.auth.util.UserCredentials
-import model.exception.MyWalletException
+import com.tony.common.exception.MyWalletException
+import com.tony.common.model.event.UserCreatedEvent
+import org.keycloak.admin.client.CreatedResponseUtil
 import org.keycloak.admin.client.Keycloak
 import org.keycloak.representations.idm.UserRepresentation
 import org.springframework.http.MediaType
@@ -30,7 +33,8 @@ class KeycloakService(
     private val keycloak: Keycloak,
     private val props: KeycloakProperties,
     private val mapper: ObjectMapper,
-    private val webClient: WebClient
+    private val webClient: WebClient,
+    private val eventProducer: AuthEventProducer
 ) {
 
     private val tokenUrl = "${props.url}/realms/${props.realm}/protocol/openid-connect/token"
@@ -46,12 +50,20 @@ class KeycloakService(
             isEnabled = true
         }
         val response = keycloak.realm(props.realm).users().create(user)
-        if (response.status != 200) {
+        if (response.status != 200 && response.status != 201) {
             val errorBody = response.readEntity(String::class.java)
             val errorMap = mapper.readValue(errorBody, Map::class.java) as Map<*, *>
             val errorMsg = errorMap["errorMessage"] ?: "Unknown error"
             throw MyWalletException(response.status, "Failed to create user: $errorMsg")
         }
+        eventProducer.sendEvent(
+            UserCreatedEvent(
+                userId = CreatedResponseUtil.getCreatedId(response),
+                email = user.email,
+                firstName = user.firstName,
+                lastName = user.lastName
+            )
+        )
     }
 
     fun login(request: LoginRequest): Mono<TokenResponse> {

@@ -3,8 +3,8 @@ package com.tony.apigateway.exception
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.MalformedJwtException
 import java.util.*
-import model.dto.ResponseErrorDto
-import model.exception.MyWalletException
+import com.tony.common.model.dto.ResponseErrorDto
+import com.tony.common.exception.MyWalletException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler

@@ -29,5 +29,4 @@ jwt:
 
 logging:
   level:
-    root: debug
-    web: debug
+    com.tony: DEBUG

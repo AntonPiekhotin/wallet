@@ -1,4 +1,4 @@
-package model.exception
+package com.tony.common.exception
 
 class MyWalletException(
     val statusCode: Int,

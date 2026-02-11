@@ -17,7 +17,10 @@ keycloak:
   url: "http://localhost:8081"
   realm: "mywallet-realm"
   client-id: "mywallet-client"
-  client-secret: "Mimesb3OYWVwK77nuAP0f5YJ4SOQgFOK"
+  client-secret: "D0t5nQjQJAfrj7uSkChM6MkYpo1Mm2FA"
+
+kafka:
+  bootstrap-servers: localhost:9092
 
 logging:
   level:
