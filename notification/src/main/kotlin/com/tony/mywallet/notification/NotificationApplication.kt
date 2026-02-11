@@ -1,11 +1,11 @@
-package com.tony.wallet
+package com.tony.mywallet.notification
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class WalletApplication
+class NotificationApplication
 
 fun main(args: Array<String>) {
-    runApplication<WalletApplication>(*args)
+    runApplication<NotificationApplication>(*args)
 }
