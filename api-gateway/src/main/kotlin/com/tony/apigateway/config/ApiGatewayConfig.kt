@@ -1,6 +1,5 @@
 package com.tony.apigateway.config
 
-import com.tony.apigateway.filter.AuthenticationFilter
 import org.springframework.cloud.gateway.route.RouteLocator
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder
 import org.springframework.context.annotation.Bean
@@ -9,7 +8,6 @@ import org.springframework.web.client.RestTemplate
 
 @Configuration
 class ApiGatewayConfig(
-    private val filter: AuthenticationFilter
 ) {
 
     @Bean
@@ -26,12 +24,10 @@ class ApiGatewayConfig(
             }
             .route("wallet") {
                 it.path("/api/v1/wallet/**")
-                    .filters { f -> f.filter(filter) }
                     .uri("lb://wallet")
             }
             .route("user") {
                 it.path("/api/v1/user/**")
-                    .filters { f -> f.filter(filter) }
                     .uri("lb://user")
             }
             .build()

@@ -6,8 +6,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8081/realms/wallet-realm
-          jwk-set-uri: http://localhost:8081/realms/wallet-realm/protocol/openid-connect/certs
+          issuer-uri: http://localhost:8081/realms/mywallet-realm
+          jwk-set-uri: http://localhost:8081/realms/mywallet-realm/protocol/openid-connect/certs
   application:
     name: api-gateway
   cloud:
@@ -24,9 +24,9 @@ eureka:
     registry-fetch-interval-seconds: 5
     service-url:
       defaultZone: http://localhost:8761/eureka/
-jwt:
-  secret: 'secretKeyForWALLETPETFAJFASLDKJFLSAKDJFASLDKJFASLDKJFAJFAKJF'
 
 logging:
   level:
     com.tony: DEBUG
+    security: DEBUG
+    web: debug

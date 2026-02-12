@@ -67,7 +67,7 @@ class KeycloakService(
     }
 
     fun login(request: LoginRequest): Mono<TokenResponse> {
-        return webClient.post()
+        val res = webClient.post()
             .uri(tokenUrl)
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .body(
@@ -85,6 +85,7 @@ class KeycloakService(
                 }
             }
             .bodyToMono<TokenResponse>()
+        return res
     }
 
     fun refresh(refreshToken: String): Mono<TokenResponse> {
