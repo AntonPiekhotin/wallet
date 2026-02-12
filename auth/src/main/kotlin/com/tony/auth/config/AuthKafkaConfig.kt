@@ -66,7 +66,7 @@ class AuthKafkaConfig {
     @Bean
     fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, Any> =
         ConcurrentKafkaListenerContainerFactory<String, Any>().apply {
-            consumerFactory = consumerFactory()
+            setConsumerFactory(consumerFactory())
             setConcurrency(1)
             containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
         }
