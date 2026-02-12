@@ -21,5 +21,6 @@ class UserEventConsumer {
     fun handleUserCreatedEvent(event: UserCreatedEvent, acknowledgment: Acknowledgment) {
         // TODO: Handle the event, e.g., create a user profile in the database
         logger.info("Received UserCreatedEvent: $event")
+        acknowledgment.acknowledge()
     }
 }

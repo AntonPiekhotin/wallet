@@ -17,5 +17,6 @@ class NotificationEventConsumer {
     fun handleUserCreatedEvent(event: UserCreatedEvent, acknowledgment: Acknowledgment) {
         // TODO: Handle the user created event, e.g., send a welcome email
         logger.info("Received UserCreatedEvent: $event")
+        acknowledgment.acknowledge()
     }
 }

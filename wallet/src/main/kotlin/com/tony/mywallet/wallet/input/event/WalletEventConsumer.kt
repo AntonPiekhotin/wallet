@@ -17,5 +17,6 @@ class WalletEventConsumer {
     fun handleUserCreatedEvent(event: UserCreatedEvent, acknowledgment: Acknowledgment) {
         // TODO: Handle the event, e.g., create a wallet for the new user
         logger.info("Received UserCreatedEvent: $event")
+        acknowledgment.acknowledge()
     }
 }
