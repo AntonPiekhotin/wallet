@@ -6,6 +6,7 @@ import java.time.LocalDateTime
 data class UserCreatedEvent(
     val userId: String,
     val email: String,
+    val role: String,
     val firstName: String,
     val lastName: String,
     val createdAt: LocalDateTime = LocalDateTime.now()

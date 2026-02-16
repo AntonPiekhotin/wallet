@@ -8,10 +8,12 @@ import com.tony.auth.output.event.AuthEventProducer
 import com.tony.auth.util.KeycloakProperties
 import com.tony.auth.util.UserCredentials
 import com.tony.common.exception.MyWalletException
+import com.tony.common.model.Role
 import com.tony.common.model.event.UserCreatedEvent
 import org.keycloak.admin.client.CreatedResponseUtil
 import org.keycloak.admin.client.Keycloak
 import org.keycloak.representations.idm.UserRepresentation
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.BodyInserters
@@ -56,9 +58,11 @@ class KeycloakService(
             val errorMsg = errorMap["errorMessage"] ?: "Unknown error"
             throw MyWalletException(response.status, "Failed to create user: $errorMsg")
         }
+        val userId = CreatedResponseUtil.getCreatedId(response)
+        assignClientRole(userId)
         eventProducer.sendEvent(
             UserCreatedEvent(
-                userId = CreatedResponseUtil.getCreatedId(response),
+                userId = userId,
                 email = user.email,
                 firstName = user.firstName,
                 lastName = user.lastName
@@ -66,8 +70,26 @@ class KeycloakService(
         )
     }
 
+    private fun assignClientRole(
+        userId: String,
+        role: Role = Role.USER
+    ) {
+        val realmResource = keycloak.realm(props.realm)
+        val client = realmResource.clients()
+            .findByClientId(props.clientId)
+            .firstOrNull()
+            ?: throw MyWalletException(HttpStatus.NOT_IMPLEMENTED.value(), "Client not found")
+        val clientResource = realmResource.clients().get(client.id)
+        val role = clientResource.roles().get(role.name).toRepresentation()
+        realmResource.users()
+            .get(userId)
+            .roles()
+            .clientLevel(client.id)
+            .add(listOf(role))
+    }
+
     fun login(request: LoginRequest): Mono<TokenResponse> {
-        val res = webClient.post()
+        return webClient.post()
             .uri(tokenUrl)
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .body(
@@ -85,7 +107,6 @@ class KeycloakService(
                 }
             }
             .bodyToMono<TokenResponse>()
-        return res
     }
 
     fun refresh(refreshToken: String): Mono<TokenResponse> {
