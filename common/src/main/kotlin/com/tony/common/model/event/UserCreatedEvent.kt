@@ -1,12 +1,13 @@
 package com.tony.common.model.event
 
+import com.tony.common.model.Role
 import com.tony.common.model.constant.KafkaConstants
 import java.time.LocalDateTime
 
 data class UserCreatedEvent(
     val userId: String,
     val email: String,
-    val role: String,
+    val role: String = Role.USER.name,
     val firstName: String,
     val lastName: String,
     val createdAt: LocalDateTime = LocalDateTime.now()
