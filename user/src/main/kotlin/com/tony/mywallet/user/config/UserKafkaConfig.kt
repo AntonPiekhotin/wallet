@@ -45,7 +45,7 @@ class UserKafkaConfig {
             containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
             setCommonErrorHandler(
                 DefaultErrorHandler(
-                    FixedBackOff(1000L, 3)
+                    FixedBackOff(10_000L, 3)
                 )
             )
         }

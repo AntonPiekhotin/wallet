@@ -4,6 +4,14 @@ server:
 spring:
   application:
     name: user
+  datasource:
+    url: jdbc:postgresql://localhost:5434/user
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
+
   security:
     oauth2:
       resourceserver:
