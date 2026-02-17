@@ -4,6 +4,13 @@ server:
 spring:
   application:
     name: wallet
+  datasource:
+    url: jdbc:postgresql://localhost:5435/wallet
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
 
 eureka:
   client:
