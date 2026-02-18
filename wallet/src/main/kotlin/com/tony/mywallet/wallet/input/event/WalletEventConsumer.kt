@@ -1,9 +1,12 @@
 package com.tony.mywallet.wallet.input.event
 
 import com.tony.common.exception.MyWalletException
+import com.tony.common.handler.CompensationHandler
+import com.tony.common.handler.SagaDispatcher
+import com.tony.common.model.constant.KafkaConstants.Group.AUTH_SERVICE
 import com.tony.common.model.constant.KafkaConstants.Group.WALLET_SERVICE
+import com.tony.common.model.constant.KafkaConstants.Topic.COMPENSATION
 import com.tony.common.model.constant.KafkaConstants.Topic.USER_CREATED
-import com.tony.common.model.constant.SagaConstants
 import com.tony.common.model.constant.SagaConstants.Source.WALLET_SOURCE
 import com.tony.common.model.event.SagaCompensationEvent
 import com.tony.common.model.event.UserCreatedEvent
@@ -18,9 +21,10 @@ import org.springframework.stereotype.Service
 @Service
 class WalletEventConsumer(
     private val walletService: WalletService,
-    private val walletEventProducer: WalletEventProducer
+    private val walletEventProducer: WalletEventProducer,
+    handlers: List<CompensationHandler>
 ) {
-
+    private val dispatcher = SagaDispatcher(handlers)
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     @KafkaListener(
@@ -47,6 +51,20 @@ class WalletEventConsumer(
             throw MyWalletException(500, e.message, e)
         } finally {
             ack.acknowledge()
+        }
+    }
+
+    @KafkaListener(
+        topics = [COMPENSATION],
+        groupId = WALLET_SERVICE,
+        containerFactory = "kafkaListenerContainerFactory",
+    )
+    fun onCompensation(event: SagaCompensationEvent, acknowledgment: Acknowledgment) {
+        logger.debug("Received compensation event: {}", event)
+        try {
+            dispatcher.dispatch(event)
+        } finally {
+            acknowledgment.acknowledge()
         }
     }
 }

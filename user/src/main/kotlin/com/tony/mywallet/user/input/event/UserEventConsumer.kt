@@ -1,7 +1,11 @@
 package com.tony.mywallet.user.input.event
 
+import com.tony.common.handler.CompensationHandler
+import com.tony.common.handler.SagaDispatcher
 import com.tony.common.model.constant.KafkaConstants.Group.USER_SERVICE
+import com.tony.common.model.constant.KafkaConstants.Topic.COMPENSATION
 import com.tony.common.model.constant.KafkaConstants.Topic.USER_CREATED
+import com.tony.common.model.constant.SagaConstants.Source.USER_SOURCE
 import com.tony.common.model.event.SagaCompensationEvent
 import com.tony.common.model.event.UserCreatedEvent
 import com.tony.mywallet.user.mapper.UserMapper.toUserEntity
@@ -15,9 +19,10 @@ import org.springframework.stereotype.Service
 @Service
 class UserEventConsumer(
     private val userService: UserService,
-    private val userEventProducer: UserEventProducer
+    private val userEventProducer: UserEventProducer,
+    handlers: List<CompensationHandler>
 ) {
-
+    private val dispatcher = SagaDispatcher(handlers)
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     @KafkaListener(
@@ -28,21 +33,36 @@ class UserEventConsumer(
     fun handleUserCreatedEvent(
         event: UserCreatedEvent,
         acknowledgment: Acknowledgment
-    ) {
+    ) = with(event) {
         logger.info("Received UserCreatedEvent: $event")
         try {
-            userService.createUser(event.toUserEntity())
+            userService.createUser(toUserEntity())
             //todo: save saga id
         } catch (e: Exception) {
             logger.error("Error while creating user ", e)
             userEventProducer.sendEvent(
                 SagaCompensationEvent(
-                    sagaId = event.sagaId,
-                    traceability = event.traceability,
+                    sagaId = sagaId,
+                    traceability = traceability,
                     reason = "Exception during user creation: " + (e.message ?: "Unknown error"),
-                    sourceService = this.javaClass.simpleName
+                    sourceService = USER_SOURCE,
+                    sagaOperation = sagaOperation,
                 )
             )
+        } finally {
+            acknowledgment.acknowledge()
+        }
+    }
+
+    @KafkaListener(
+        topics = [COMPENSATION],
+        groupId = USER_SERVICE,
+        containerFactory = "kafkaListenerContainerFactory",
+    )
+    fun onCompensation(event: SagaCompensationEvent, acknowledgment: Acknowledgment) {
+        logger.debug("Received compensation event: {}", event)
+        try {
+            dispatcher.dispatch(event)
         } finally {
             acknowledgment.acknowledge()
         }
