@@ -9,7 +9,10 @@ import com.tony.auth.util.KeycloakProperties
 import com.tony.auth.util.UserCredentials
 import com.tony.common.exception.MyWalletException
 import com.tony.common.model.Role
+import com.tony.common.model.constant.KafkaConstants.SagaContextKeys.USER_ID
 import com.tony.common.model.event.UserCreatedEvent
+import jakarta.ws.rs.core.Response
+import java.util.UUID
 import org.keycloak.admin.client.CreatedResponseUtil
 import org.keycloak.admin.client.Keycloak
 import org.keycloak.representations.idm.UserRepresentation
@@ -53,21 +56,33 @@ class KeycloakService(
         }
         val response = keycloak.realm(props.realm).users().create(user)
         if (response.status != 200 && response.status != 201) {
-            val errorBody = response.readEntity(String::class.java)
-            val errorMap = mapper.readValue(errorBody, Map::class.java) as Map<*, *>
-            val errorMsg = errorMap["errorMessage"] ?: "Unknown error"
-            throw MyWalletException(response.status, "Failed to create user: $errorMsg")
+            processError(response)
         }
         val userId = CreatedResponseUtil.getCreatedId(response)
         assignClientRole(userId)
+        sendUserCreatedEvent(userId, user)
+    }
+
+    private fun sendUserCreatedEvent(userId: String, user: UserRepresentation) {
         eventProducer.sendEvent(
             UserCreatedEvent(
+                sagaId = UUID.randomUUID().toString(),
                 userId = userId,
                 email = user.email,
                 firstName = user.firstName,
-                lastName = user.lastName
+                lastName = user.lastName,
+                traceability = mutableMapOf(
+                    USER_ID to userId
+                )
             )
         )
+    }
+
+    private fun processError(response: Response): Nothing {
+        val errorBody = response.readEntity(String::class.java)
+        val errorMap = mapper.readValue(errorBody, Map::class.java) as Map<*, *>
+        val errorMsg = errorMap["errorMessage"] ?: "Unknown error"
+        throw MyWalletException(response.status, "Failed to create user: $errorMsg")
     }
 
     private fun assignClientRole(

@@ -26,3 +26,6 @@ eureka:
 
 keycloak:
   client-id: mywallet-client
+
+kafka:
+  bootstrap-servers: localhost:9092

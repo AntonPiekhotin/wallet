@@ -1,6 +1,30 @@
 package com.tony.common.model.event
 
-interface KafkaEvent {
-    val key: String
-    val topic: String
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.tony.common.model.constant.KafkaConstants.Topic.COMPENSATION
+import java.time.LocalDateTime
+
+abstract class KafkaEvent {
+    @get:JsonIgnore
+    abstract val topic: String
+
+    @get:JsonIgnore
+    abstract val key: String
+}
+
+abstract class SagaEvent : KafkaEvent() {
+    abstract val sagaId: String
+    abstract val traceability: MutableMap<String, String>
+    val timestamp: LocalDateTime = LocalDateTime.now()
+    override val key: String
+        get() = sagaId
+}
+
+data class SagaCompensationEvent(
+    override val sagaId: String,
+    override val traceability: MutableMap<String, String>,
+    val reason: String,
+    val sourceService: String
+) : SagaEvent() {
+    override val topic: String = COMPENSATION
 }
