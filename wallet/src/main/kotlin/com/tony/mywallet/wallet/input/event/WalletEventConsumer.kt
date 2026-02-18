@@ -2,8 +2,9 @@ package com.tony.mywallet.wallet.input.event
 
 import com.tony.common.exception.MyWalletException
 import com.tony.common.model.constant.KafkaConstants.Group.WALLET_SERVICE
-import com.tony.common.model.constant.KafkaConstants.SagaContextKeys.USER_ID
 import com.tony.common.model.constant.KafkaConstants.Topic.USER_CREATED
+import com.tony.common.model.constant.SagaConstants
+import com.tony.common.model.constant.SagaConstants.Source.WALLET_SOURCE
 import com.tony.common.model.event.SagaCompensationEvent
 import com.tony.common.model.event.UserCreatedEvent
 import com.tony.mywallet.wallet.output.event.WalletEventProducer
@@ -39,7 +40,8 @@ class WalletEventConsumer(
                     sagaId = event.sagaId,
                     traceability = event.traceability,
                     reason = "Exception during wallet creation: " + (e.message ?: "Unknown error"),
-                    sourceService = this.javaClass.simpleName
+                    sourceService = WALLET_SOURCE,
+                    sagaOperation = event.sagaOperation,
                 )
             )
             throw MyWalletException(500, e.message, e)

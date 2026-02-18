@@ -2,7 +2,7 @@ package com.tony.common.model.event
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.tony.common.model.constant.KafkaConstants.Topic.COMPENSATION
-import com.tony.common.model.constant.SagaConstants.SagaType
+import com.tony.common.model.constant.SagaConstants.SagaOperation
 import java.time.LocalDateTime
 
 abstract class KafkaEvent {
@@ -16,7 +16,7 @@ abstract class KafkaEvent {
 abstract class SagaEvent : KafkaEvent() {
     abstract val sagaId: String
     abstract val traceability: MutableMap<String, String>
-    abstract val sagaType: SagaType
+    abstract val sagaOperation: SagaOperation
     val timestamp: LocalDateTime = LocalDateTime.now()
     override val key: String
         get() = sagaId
@@ -25,7 +25,7 @@ abstract class SagaEvent : KafkaEvent() {
 data class SagaCompensationEvent(
     override val sagaId: String,
     override val traceability: MutableMap<String, String>,
-    override val sagaType: SagaType,
+    override val sagaOperation: SagaOperation,
     val reason: String,
     val sourceService: String
 ) : SagaEvent() {
