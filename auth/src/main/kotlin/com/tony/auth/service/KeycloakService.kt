@@ -12,7 +12,7 @@ import com.tony.common.model.Role
 import com.tony.common.model.constant.KafkaConstants.SagaContextKeys.USER_ID
 import com.tony.common.model.event.UserCreatedEvent
 import jakarta.ws.rs.core.Response
-import java.util.UUID
+import java.util.*
 import org.keycloak.admin.client.CreatedResponseUtil
 import org.keycloak.admin.client.Keycloak
 import org.keycloak.representations.idm.UserRepresentation
@@ -160,5 +160,14 @@ class KeycloakService(
             }
             .toBodilessEntity()
             .then()
+    }
+
+    fun deleteUser(userId: String) {
+        val usersResource = keycloak.realm(props.realm).users()
+        try {
+            usersResource.get(userId).remove()
+        } catch (ex: Exception) {
+            throw MyWalletException(statusCode = 500, message = "Failed to delete user $userId", cause = ex)
+        }
     }
 }
