@@ -3,7 +3,6 @@ package com.tony.mywallet.wallet.input.event
 import com.tony.common.exception.MyWalletException
 import com.tony.common.handler.CompensationHandler
 import com.tony.common.handler.SagaDispatcher
-import com.tony.common.model.constant.KafkaConstants.Group.AUTH_SERVICE
 import com.tony.common.model.constant.KafkaConstants.Group.WALLET_SERVICE
 import com.tony.common.model.constant.KafkaConstants.Topic.COMPENSATION
 import com.tony.common.model.constant.KafkaConstants.Topic.USER_CREATED
