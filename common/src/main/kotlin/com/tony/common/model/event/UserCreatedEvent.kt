@@ -3,7 +3,7 @@ package com.tony.common.model.event
 import com.tony.common.model.Role
 import com.tony.common.model.constant.KafkaConstants.SagaContextKeys.USER_ID
 import com.tony.common.model.constant.KafkaConstants.Topic.USER_CREATED
-import com.tony.common.model.constant.SagaConstants.SagaOperation
+import com.tony.common.model.constant.SagaOperation
 
 data class UserCreatedEvent(
     override val sagaId: String,

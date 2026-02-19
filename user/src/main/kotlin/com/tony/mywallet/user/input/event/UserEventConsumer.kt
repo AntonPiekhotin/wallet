@@ -8,9 +8,11 @@ import com.tony.common.model.constant.KafkaConstants.Topic.USER_CREATED
 import com.tony.common.model.constant.Source.USER_SOURCE
 import com.tony.common.model.event.SagaCompensationEvent
 import com.tony.common.model.event.UserCreatedEvent
+import com.tony.mywallet.common.jpa.store.SagaStore
 import com.tony.mywallet.user.mapper.UserMapper.toUserEntity
 import com.tony.mywallet.user.output.event.UserEventProducer
 import com.tony.mywallet.user.service.UserService
+import com.tony.mywallet.user.util.UserSagaContext
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.Acknowledgment
@@ -20,7 +22,8 @@ import org.springframework.stereotype.Service
 class UserEventConsumer(
     private val userService: UserService,
     private val userEventProducer: UserEventProducer,
-    handlers: List<CompensationHandler>
+    handlers: List<CompensationHandler>,
+    private val sagaStore: SagaStore
 ) {
     private val dispatcher = SagaDispatcher(handlers)
     private val logger = LoggerFactory.getLogger(this::class.java)
@@ -36,8 +39,8 @@ class UserEventConsumer(
     ) = with(event) {
         logger.info("Received UserCreatedEvent: $event")
         try {
-            userService.createUser(toUserEntity())
-            //todo: save saga id
+            val user = userService.createUser(toUserEntity())
+            sagaStore.saveContext(sagaId, sagaOperation, UserSagaContext.Creation(user.id))
         } catch (e: Exception) {
             logger.error("Error while creating user ", e)
             userEventProducer.sendEvent(

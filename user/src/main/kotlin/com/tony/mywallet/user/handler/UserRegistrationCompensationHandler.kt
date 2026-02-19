@@ -1,18 +1,25 @@
 package com.tony.mywallet.user.handler
 
-import com.tony.common.saga.handler.CompensationHandler
-import com.tony.common.model.constant.SagaConstants.SagaOperation
 import com.tony.common.model.event.SagaCompensationEvent
-import org.slf4j.LoggerFactory
+import com.tony.mywallet.common.jpa.handler.AbstractCompensationHandler
+import com.tony.mywallet.common.jpa.store.SagaStore
+import com.tony.mywallet.user.output.persistent.UserRepository
+import com.tony.mywallet.user.util.UserSagaBindings
+import com.tony.mywallet.user.util.UserSagaContext
 import org.springframework.stereotype.Component
 
 @Component
-class UserRegistrationCompensationHandler : CompensationHandler {
-    override val supportedSagaOperation: SagaOperation = SagaOperation.USER_CREATED
+class WalletRegistrationCompensationHandler(
+    override val sagaStore: SagaStore,
+    private val userRepository: UserRepository,
+) : AbstractCompensationHandler<UserSagaContext.Creation>(
+    UserSagaBindings.USER_CREATION
+) {
 
-    private val logger = LoggerFactory.getLogger(this::class.java)
-
-    override fun handle(event: SagaCompensationEvent) {
-        //todo: implement
+    override fun compensate(event: SagaCompensationEvent, context: UserSagaContext.Creation) {
+        logger.info("Rolling back user creation for userId: ${context.userId}")
+        userRepository.deleteById(context.userId).also {
+            logger.info("User with id: ${context.userId} has been deleted.")
+        }
     }
 }

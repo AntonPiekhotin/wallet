@@ -51,7 +51,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
     implementation("org.springframework.kafka:spring-kafka")
 
-    implementation("com.tony.mywallet:common:1.0")
+    implementation("com.tony.mywallet:common-jpa:1.0")
 }
 
 kotlin {

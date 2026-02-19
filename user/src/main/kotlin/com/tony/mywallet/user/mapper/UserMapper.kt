@@ -28,7 +28,7 @@ object UserMapper {
         firstName = firstName,
         lastName = lastName,
         email = email,
-        createdAt = createdAt,
+        createdAt = timestamp,
     )
 
     fun UserCreatedEvent.toUserEntity() = User(
@@ -36,6 +36,6 @@ object UserMapper {
         firstName = firstName,
         lastName = lastName,
         email = email,
-        createdAt = createdAt,
+        createdAt = timestamp,
     )
 }

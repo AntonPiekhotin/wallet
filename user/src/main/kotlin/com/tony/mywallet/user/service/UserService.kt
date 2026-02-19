@@ -11,8 +11,8 @@ class UserService(
 ) {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    fun createUser(user: User) {
+    fun createUser(user: User): User {
         logger.info("Creating user ${user.id}")
-        userRepository.save(user)
+        return userRepository.save(user)
     }
 }
