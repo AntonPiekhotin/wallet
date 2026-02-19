@@ -3,6 +3,8 @@ package com.tony.mywallet.common.jpa.entity
 import com.tony.common.model.constant.SagaConstants
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import java.time.Instant
@@ -16,6 +18,7 @@ data class SagaJournalEntity(
     val sagaId: String,
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     val sagaType: SagaConstants.SagaOperation,
 
     @Column(columnDefinition = "jsonb", nullable = false)
