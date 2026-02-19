@@ -1,17 +1,19 @@
 package com.tony.mywallet.wallet.input.event
 
 import com.tony.common.exception.MyWalletException
-import com.tony.common.handler.CompensationHandler
-import com.tony.common.handler.SagaDispatcher
+import com.tony.common.saga.handler.CompensationHandler
+import com.tony.common.saga.handler.SagaDispatcher
 import com.tony.common.model.constant.KafkaConstants.Group.WALLET_SERVICE
 import com.tony.common.model.constant.KafkaConstants.Topic.COMPENSATION
 import com.tony.common.model.constant.KafkaConstants.Topic.USER_CREATED
-import com.tony.common.model.constant.SagaConstants.Source.WALLET_SOURCE
+import com.tony.common.model.constant.Source.WALLET_SOURCE
 import com.tony.common.model.event.SagaCompensationEvent
 import com.tony.common.model.event.UserCreatedEvent
+import com.tony.mywallet.common.jpa.store.SagaStore
+import com.tony.mywallet.wallet.model.WalletSagaContext
 import com.tony.mywallet.wallet.output.event.WalletEventProducer
 import com.tony.mywallet.wallet.service.WalletService
-import java.util.UUID
+import java.util.*
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.Acknowledgment
@@ -21,7 +23,8 @@ import org.springframework.stereotype.Service
 class WalletEventConsumer(
     private val walletService: WalletService,
     private val walletEventProducer: WalletEventProducer,
-    handlers: List<CompensationHandler>
+    handlers: List<CompensationHandler>,
+    private val sagaStore: SagaStore,
 ) {
     private val dispatcher = SagaDispatcher(handlers)
     private val logger = LoggerFactory.getLogger(this::class.java)
@@ -34,8 +37,8 @@ class WalletEventConsumer(
     fun handleUserCreatedEvent(event: UserCreatedEvent, ack: Acknowledgment) {
         logger.info("Received UserCreatedEvent: $event")
         try {
-            walletService.createWallet(userId = UUID.fromString(event.userId))
-            //todo: save saga id
+            val wallet = walletService.createWallet(userId = UUID.fromString(event.userId))
+            sagaStore.saveContext(event.sagaId, event.sagaOperation, WalletSagaContext.Creation(wallet.id))
         } catch (e: Exception) {
             logger.error("Error while creating wallet ", e)
             walletEventProducer.sendEvent(

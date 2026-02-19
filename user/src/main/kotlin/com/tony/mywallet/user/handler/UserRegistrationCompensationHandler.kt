@@ -1,6 +1,6 @@
 package com.tony.mywallet.user.handler
 
-import com.tony.common.handler.CompensationHandler
+import com.tony.common.saga.handler.CompensationHandler
 import com.tony.common.model.constant.SagaConstants.SagaOperation
 import com.tony.common.model.event.SagaCompensationEvent
 import org.slf4j.LoggerFactory

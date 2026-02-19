@@ -1,6 +1,6 @@
-package com.tony.common.handler
+package com.tony.common.saga.handler
 
-import com.tony.common.model.constant.SagaConstants.SagaOperation
+import com.tony.common.model.constant.SagaOperation
 import com.tony.common.model.event.SagaCompensationEvent
 
 interface CompensationHandler {

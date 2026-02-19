@@ -1,9 +1,9 @@
 package com.tony.auth.handler
 
 import com.tony.auth.service.KeycloakService
-import com.tony.common.handler.CompensationHandler
+import com.tony.common.saga.handler.CompensationHandler
 import com.tony.common.model.constant.KafkaConstants.SagaContextKeys.USER_ID
-import com.tony.common.model.constant.SagaConstants.SagaOperation
+import com.tony.common.model.constant.SagaOperation
 import com.tony.common.model.event.SagaCompensationEvent
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
