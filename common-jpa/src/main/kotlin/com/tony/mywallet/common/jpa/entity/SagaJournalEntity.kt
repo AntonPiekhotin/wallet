@@ -9,6 +9,8 @@ import jakarta.persistence.Id
 import jakarta.persistence.Table
 import java.time.Instant
 import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 
 @Entity
 @Table(name = "saga_journal")
@@ -21,6 +23,7 @@ data class SagaJournalEntity(
     @Enumerated(EnumType.STRING)
     val sagaType: SagaOperation,
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb", nullable = false)
     val payload: String,
 
