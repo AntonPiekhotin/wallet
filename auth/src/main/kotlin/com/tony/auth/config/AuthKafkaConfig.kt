@@ -1,7 +1,8 @@
 package com.tony.auth.config
 
-import com.fasterxml.jackson.databind.JsonDeserializer
 import com.tony.common.model.constant.KafkaConstants
+import kotlin.Any
+import kotlin.String
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
@@ -17,7 +18,10 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.core.ProducerFactory
 import org.springframework.kafka.listener.ContainerProperties
+import org.springframework.kafka.listener.DefaultErrorHandler
+import org.springframework.kafka.support.serializer.JacksonJsonDeserializer
 import org.springframework.kafka.support.serializer.JacksonJsonSerializer
+import org.springframework.util.backoff.FixedBackOff
 
 @Configuration
 @EnableKafka
@@ -47,27 +51,34 @@ class AuthKafkaConfig {
         KafkaTemplate(producerFactory())
 
     @Bean
-    fun consumerFactory(): ConsumerFactory<String, Any> {
-        val props: MutableMap<String, Any> = hashMapOf(
-            ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG to bootstrapServers,
-            ConsumerConfig.GROUP_ID_CONFIG to KafkaConstants.Group.AUTH_SERVICE,
-            ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
-            ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to JsonDeserializer::class.java,
+    fun consumerFactory(): ConsumerFactory<String, String> =
+        DefaultKafkaConsumerFactory(
+            mutableMapOf<String, Any>(
+                ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG to bootstrapServers,
+                ConsumerConfig.GROUP_ID_CONFIG to KafkaConstants.Group.AUTH_SERVICE,
+                ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
+                ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to JacksonJsonDeserializer::class.java,
+                ConsumerConfig.AUTO_OFFSET_RESET_CONFIG to "earliest",
+                ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG to false,
+                ConsumerConfig.MAX_POLL_RECORDS_CONFIG to 500,
+                ConsumerConfig.FETCH_MIN_BYTES_CONFIG to 1,
+                ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG to 500,
 
-            ConsumerConfig.AUTO_OFFSET_RESET_CONFIG to "earliest",
-            ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG to false,
-
-            "spring.json.trusted.packages" to "*",
-            "spring.json.value.default.type" to "com.tony.common.model.event.KafkaEvent"
+                "spring.json.trusted.packages" to "*",
+                "spring.json.value.default.type" to "com.tony.common.model.event.KafkaEvent"
+            )
         )
-        return DefaultKafkaConsumerFactory(props)
-    }
 
     @Bean
-    fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, Any> =
-        ConcurrentKafkaListenerContainerFactory<String, Any>().apply {
+    fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String> =
+        ConcurrentKafkaListenerContainerFactory<String, String>().apply {
             setConsumerFactory(consumerFactory())
             setConcurrency(1)
             containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
+            setCommonErrorHandler(
+                DefaultErrorHandler(
+                    FixedBackOff(10_000L, 3)
+                )
+            )
         }
 }
