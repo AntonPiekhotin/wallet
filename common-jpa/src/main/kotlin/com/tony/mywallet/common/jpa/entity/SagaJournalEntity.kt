@@ -1,5 +1,6 @@
 package com.tony.mywallet.common.jpa.entity
 
+import com.tony.common.model.constant.SagaConstants
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
@@ -15,7 +16,7 @@ data class SagaJournalEntity(
     val sagaId: String,
 
     @Column(nullable = false)
-    val sagaType: String,
+    val sagaType: SagaConstants.SagaOperation,
 
     @Column(columnDefinition = "jsonb", nullable = false)
     val payload: String,

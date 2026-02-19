@@ -1,6 +1,7 @@
 package com.tony.mywallet.common.jpa.store
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.tony.common.model.constant.SagaConstants
 import com.tony.mywallet.common.jpa.entity.SagaJournalEntity
 import com.tony.mywallet.common.jpa.repo.SagaJournalRepository
 import com.tony.mywallet.common.jpa.repo.SagaPayload
@@ -13,9 +14,9 @@ class SagaStore(
     private val objectMapper: ObjectMapper
 ) {
 
-    fun <T : SagaPayload> saveContext(sagaId: String, sagaType: String, context: T) {
+    fun <T : SagaPayload> saveContext(sagaId: String, sagaOperation: SagaConstants.SagaOperation, context: T) {
         val jsonPayload = objectMapper.writeValueAsString(context)
-        val entity = SagaJournalEntity(sagaId, sagaType, jsonPayload)
+        val entity = SagaJournalEntity(sagaId, sagaOperation, jsonPayload)
         repository.save(entity)
     }
 
