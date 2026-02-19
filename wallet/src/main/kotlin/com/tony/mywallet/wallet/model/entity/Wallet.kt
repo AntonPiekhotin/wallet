@@ -1,4 +1,4 @@
-package com.tony.mywallet.wallet.model
+package com.tony.mywallet.wallet.model.entity
 
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column

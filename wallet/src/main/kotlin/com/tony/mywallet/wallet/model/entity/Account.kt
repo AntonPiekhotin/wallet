@@ -1,4 +1,4 @@
-package com.tony.mywallet.wallet.model
+package com.tony.mywallet.wallet.model.entity
 
 import com.tony.common.model.constant.Currency
 import jakarta.persistence.Column
