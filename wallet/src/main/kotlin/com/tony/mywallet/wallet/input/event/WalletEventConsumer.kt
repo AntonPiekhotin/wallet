@@ -1,17 +1,14 @@
 package com.tony.mywallet.wallet.input.event
 
-import com.tony.common.exception.MyWalletException
-import com.tony.common.saga.handler.CompensationHandler
-import com.tony.common.saga.handler.SagaDispatcher
 import com.tony.common.model.constant.KafkaConstants.Group.WALLET_SERVICE
 import com.tony.common.model.constant.KafkaConstants.Topic.COMPENSATION
 import com.tony.common.model.constant.KafkaConstants.Topic.USER_CREATED
-import com.tony.common.model.constant.Source.WALLET_SOURCE
 import com.tony.common.model.event.SagaCompensationEvent
 import com.tony.common.model.event.UserCreatedEvent
+import com.tony.common.saga.handler.CompensationHandler
+import com.tony.common.saga.handler.SagaDispatcher
 import com.tony.mywallet.common.jpa.store.SagaStore
 import com.tony.mywallet.wallet.model.WalletSagaContext
-import com.tony.mywallet.wallet.output.event.WalletEventProducer
 import com.tony.mywallet.wallet.service.WalletService
 import java.util.*
 import org.slf4j.LoggerFactory
@@ -22,7 +19,6 @@ import org.springframework.stereotype.Service
 @Service
 class WalletEventConsumer(
     private val walletService: WalletService,
-    private val walletEventProducer: WalletEventProducer,
     handlers: List<CompensationHandler>,
     private val sagaStore: SagaStore,
 ) {
@@ -36,24 +32,9 @@ class WalletEventConsumer(
     )
     fun handleUserCreatedEvent(event: UserCreatedEvent, ack: Acknowledgment) {
         logger.info("Received UserCreatedEvent: $event")
-        try {
-            val wallet = walletService.createWallet(userId = UUID.fromString(event.userId))
-            sagaStore.saveContext(event.sagaId, event.sagaOperation, WalletSagaContext.Creation(wallet.id))
-        } catch (e: Exception) {
-            logger.error("Error while creating wallet ", e)
-            walletEventProducer.sendEvent(
-                SagaCompensationEvent(
-                    sagaId = event.sagaId,
-                    traceability = event.traceability,
-                    reason = "Exception during wallet creation: " + (e.message ?: "Unknown error"),
-                    sourceService = WALLET_SOURCE,
-                    sagaOperation = event.sagaOperation,
-                )
-            )
-            throw MyWalletException(500, e.message, e)
-        } finally {
-            ack.acknowledge()
-        }
+        val wallet = walletService.createWallet(userId = UUID.fromString(event.userId))
+        sagaStore.saveContext(event.sagaId, event.sagaOperation, WalletSagaContext.Creation(wallet.id))
+        ack.acknowledge()
     }
 
     @KafkaListener(

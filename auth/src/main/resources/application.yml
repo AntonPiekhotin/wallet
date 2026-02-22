@@ -24,6 +24,7 @@ kafka:
 
 logging:
   level:
+    com.tony: DEBUG
     root: INFO
     org.keycloak: DEBUG
     org.jboss.resteasy: DEBUG

@@ -10,7 +10,7 @@ spring:
     password: postgres
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
 
   security:
     oauth2:
@@ -29,3 +29,7 @@ keycloak:
 
 kafka:
   bootstrap-servers: localhost:9092
+
+logging:
+  level:
+    com.tony: DEBUG

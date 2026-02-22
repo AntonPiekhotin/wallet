@@ -9,7 +9,7 @@ import com.tony.mywallet.user.util.UserSagaContext
 import org.springframework.stereotype.Component
 
 @Component
-class WalletRegistrationCompensationHandler(
+class UserRegistrationCompensationHandler(
     override val sagaStore: SagaStore,
     private val userRepository: UserRepository,
 ) : AbstractCompensationHandler<UserSagaContext.Creation>(

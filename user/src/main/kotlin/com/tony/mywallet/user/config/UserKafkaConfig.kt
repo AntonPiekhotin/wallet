@@ -68,15 +68,13 @@ class UserKafkaConfig {
         )
 
     @Bean
-    fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String> =
+    fun kafkaListenerContainerFactory(
+        errorHandler: DefaultErrorHandler
+    ): ConcurrentKafkaListenerContainerFactory<String, String> =
         ConcurrentKafkaListenerContainerFactory<String, String>().apply {
             setConsumerFactory(consumerFactory())
             setConcurrency(1)
             containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
-            setCommonErrorHandler(
-                DefaultErrorHandler(
-                    FixedBackOff(10_000L, 3)
-                )
-            )
+            setCommonErrorHandler(errorHandler)
         }
 }
