@@ -1,12 +1,13 @@
 package com.tony.common.model.constant
 
-class KafkaConstants {
+class KafkaConstants { //todo: remove class
 
     object Group {
         const val AUTH_SERVICE = "auth-service"
         const val NOTIFICATION_SERVICE = "notification-service"
         const val USER_SERVICE = "user-service"
         const val WALLET_SERVICE = "wallet-service"
+        const val TRANSACTION_SERVICE = "transaction-service"
     }
 
     object Topic {

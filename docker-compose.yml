@@ -106,6 +106,23 @@ services:
     networks:
       - wallet-network
 
+  transaction-db:
+    image: postgres:15
+    container_name: transaction-db
+    environment:
+      POSTGRES_DB: transaction
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d transaction" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5436:5432"
+    networks:
+      - wallet-network
+
 volumes:
   kafka_data:
 

@@ -7,4 +7,5 @@ enum class SagaOperation(name: String) {
 object Source {
     const val WALLET_SOURCE = "wallet-service"
     const val USER_SOURCE = "user-service"
+    const val TRANSACTION_SOURCE = "transaction-service"
 }
