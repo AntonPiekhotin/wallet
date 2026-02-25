@@ -2,6 +2,9 @@ package com.tony.common.model.constant
 
 enum class SagaOperation(name: String) {
     USER_CREATED("USER_CREATED"),
+    DEPOSIT("DEPOSIT"),
+    WITHDRAWAL("WITHDRAWAL"),
+    P2P_TRANSFER("P2P_TRANSFER"),
 }
 
 object Source {
