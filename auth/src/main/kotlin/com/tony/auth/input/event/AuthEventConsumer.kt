@@ -2,8 +2,8 @@ package com.tony.auth.input.event
 
 import com.tony.common.saga.handler.CompensationHandler
 import com.tony.common.saga.handler.SagaDispatcher
-import com.tony.common.model.constant.KafkaConstants.Group.AUTH_SERVICE
-import com.tony.common.model.constant.KafkaConstants.Topic.COMPENSATION
+import com.tony.common.model.constant.KafkaGroup.AUTH_SERVICE
+import com.tony.common.model.constant.KafkaTopic.COMPENSATION
 import com.tony.common.model.event.SagaCompensationEvent
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener

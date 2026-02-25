@@ -1,8 +1,8 @@
 package com.tony.mywallet.wallet.input.event
 
-import com.tony.common.model.constant.KafkaConstants.Group.WALLET_SERVICE
-import com.tony.common.model.constant.KafkaConstants.Topic.COMPENSATION
-import com.tony.common.model.constant.KafkaConstants.Topic.USER_CREATED
+import com.tony.common.model.constant.KafkaGroup.WALLET_SERVICE
+import com.tony.common.model.constant.KafkaTopic.COMPENSATION
+import com.tony.common.model.constant.KafkaTopic.USER_CREATED
 import com.tony.common.model.event.SagaCompensationEvent
 import com.tony.common.model.event.UserCreatedEvent
 import com.tony.common.saga.handler.CompensationHandler

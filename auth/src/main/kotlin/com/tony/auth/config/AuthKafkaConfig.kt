@@ -1,6 +1,6 @@
 package com.tony.auth.config
 
-import com.tony.common.model.constant.KafkaConstants
+import com.tony.common.model.constant.KafkaGroup
 import kotlin.Any
 import kotlin.String
 import org.apache.kafka.clients.consumer.ConsumerConfig
@@ -55,7 +55,7 @@ class AuthKafkaConfig {
         DefaultKafkaConsumerFactory(
             mutableMapOf<String, Any>(
                 ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG to bootstrapServers,
-                ConsumerConfig.GROUP_ID_CONFIG to KafkaConstants.Group.AUTH_SERVICE,
+                ConsumerConfig.GROUP_ID_CONFIG to KafkaGroup.AUTH_SERVICE,
                 ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
                 ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to JacksonJsonDeserializer::class.java,
                 ConsumerConfig.AUTO_OFFSET_RESET_CONFIG to "earliest",

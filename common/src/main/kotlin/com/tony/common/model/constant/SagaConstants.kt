@@ -7,8 +7,13 @@ enum class SagaOperation(name: String) {
     P2P_TRANSFER("P2P_TRANSFER"),
 }
 
-object Source {
+object SagaSource {
     const val WALLET_SOURCE = "wallet-service"
     const val USER_SOURCE = "user-service"
     const val TRANSACTION_SOURCE = "transaction-service"
+}
+
+object SagaContextKeys {
+    const val USER_ID = "user.id"
+    const val WALLET_ID = "wallet.id"
 }

@@ -1,6 +1,6 @@
 package com.tony.mywallet.transaction.config
 
-import com.tony.common.model.constant.Source.WALLET_SOURCE
+import com.tony.common.model.constant.SagaSource.WALLET_SOURCE
 import com.tony.common.model.event.SagaCompensationEvent
 import com.tony.common.model.event.UserCreatedEvent
 import com.tony.mywallet.transaction.output.event.TransactionEventProducer

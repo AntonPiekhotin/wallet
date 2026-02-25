@@ -1,8 +1,8 @@
 package com.tony.common.model.event
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.tony.common.model.constant.KafkaConstants.Topic.COMPENSATION
 import com.tony.common.model.constant.SagaOperation
+import com.tony.common.model.constant.KafkaTopic.COMPENSATION
 import java.time.LocalDateTime
 
 abstract class KafkaEvent {

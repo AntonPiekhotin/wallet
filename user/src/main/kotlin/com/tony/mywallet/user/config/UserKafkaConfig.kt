@@ -1,6 +1,6 @@
 package com.tony.mywallet.user.config
 
-import com.tony.common.model.constant.KafkaConstants
+import com.tony.common.model.constant.KafkaGroup
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
@@ -19,7 +19,6 @@ import org.springframework.kafka.listener.ContainerProperties
 import org.springframework.kafka.listener.DefaultErrorHandler
 import org.springframework.kafka.support.serializer.JacksonJsonDeserializer
 import org.springframework.kafka.support.serializer.JacksonJsonSerializer
-import org.springframework.util.backoff.FixedBackOff
 
 @Configuration
 @EnableKafka
@@ -53,7 +52,7 @@ class UserKafkaConfig {
         DefaultKafkaConsumerFactory(
             mutableMapOf<String, Any>(
                 ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG to bootstrapServers,
-                ConsumerConfig.GROUP_ID_CONFIG to KafkaConstants.Group.USER_SERVICE,
+                ConsumerConfig.GROUP_ID_CONFIG to KafkaGroup.USER_SERVICE,
                 ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
                 ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to JacksonJsonDeserializer::class.java,
                 ConsumerConfig.AUTO_OFFSET_RESET_CONFIG to "earliest",

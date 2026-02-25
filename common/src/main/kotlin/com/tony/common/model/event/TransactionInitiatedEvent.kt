@@ -1,9 +1,9 @@
 package com.tony.common.model.event
 
-import com.tony.common.model.constant.KafkaConstants.Topic.DEPOSIT
-import com.tony.common.model.constant.KafkaConstants.Topic.P2P_TRANSFER
-import com.tony.common.model.constant.KafkaConstants.Topic.WITHDRAWAL
 import com.tony.common.model.constant.SagaOperation
+import com.tony.common.model.constant.KafkaTopic.DEPOSIT
+import com.tony.common.model.constant.KafkaTopic.P2P_TRANSFER
+import com.tony.common.model.constant.KafkaTopic.WITHDRAWAL
 import java.math.BigDecimal
 import java.util.UUID
 

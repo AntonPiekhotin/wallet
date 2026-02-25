@@ -2,7 +2,7 @@ package com.tony.auth.handler
 
 import com.tony.auth.service.KeycloakService
 import com.tony.common.saga.handler.CompensationHandler
-import com.tony.common.model.constant.KafkaConstants.SagaContextKeys.USER_ID
+import com.tony.common.model.constant.SagaContextKeys.USER_ID
 import com.tony.common.model.constant.SagaOperation
 import com.tony.common.model.event.SagaCompensationEvent
 import org.slf4j.LoggerFactory

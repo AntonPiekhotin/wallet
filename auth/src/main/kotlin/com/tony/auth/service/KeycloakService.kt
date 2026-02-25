@@ -9,7 +9,7 @@ import com.tony.auth.util.KeycloakProperties
 import com.tony.auth.util.UserCredentials
 import com.tony.common.exception.MyWalletException
 import com.tony.common.model.Role
-import com.tony.common.model.constant.KafkaConstants.SagaContextKeys.USER_ID
+import com.tony.common.model.constant.SagaContextKeys.USER_ID
 import com.tony.common.model.event.UserCreatedEvent
 import jakarta.ws.rs.core.Response
 import java.util.*
