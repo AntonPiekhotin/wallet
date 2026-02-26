@@ -1,19 +1,16 @@
-package com.tony.mywallet.user.util
+package com.tony.common.security.util
 
 import com.tony.common.model.UserPrincipal
-import org.springframework.beans.factory.annotation.Value
+import kotlin.collections.get
 import org.springframework.core.convert.converter.Converter
 import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.oauth2.jwt.Jwt
-import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
 
-@Component
 class JwtAuthenticationConverter(
-    @Value($$"${keycloak.client-id}")
-    private val clientId: String
+    private val properties: JwtConverterProperties
 ) : Converter<Jwt, Mono<AbstractAuthenticationToken>> {
     override fun convert(source: Jwt): Mono<AbstractAuthenticationToken> {
         return Mono.just(
@@ -31,8 +28,12 @@ class JwtAuthenticationConverter(
 
     private fun extractRoles(jwt: Jwt): Set<String> {
         val resourceAccess = jwt.getClaim<Map<String, Any>>("resource_access") ?: return emptySet()
-        val client = resourceAccess[clientId] as? Map<*, *> ?: return emptySet()
+        val client = resourceAccess[properties.clientId] as? Map<*, *> ?: return emptySet()
         val roles = client["roles"] as? Collection<*> ?: return emptySet()
         return roles.filterIsInstance<String>().toSet()
     }
 }
+
+data class JwtConverterProperties(
+    val clientId: String
+)

@@ -1,6 +1,8 @@
 package com.tony.mywallet.user.config
 
-import com.tony.mywallet.user.util.JwtAuthenticationConverter
+import com.tony.common.security.util.JwtAuthenticationConverter
+import com.tony.common.security.util.JwtConverterProperties
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
@@ -12,8 +14,13 @@ import org.springframework.security.web.server.SecurityWebFilterChain
 @EnableWebFluxSecurity
 @EnableMethodSecurity
 class AuthConfig(
-    private val customAuthenticationConverter: JwtAuthenticationConverter
+    @Value($$"${keycloak.client-id}")
+    private val clientId: String,
 ) {
+
+    @Bean
+    fun customAuthenticationConverter(): JwtAuthenticationConverter =
+        JwtAuthenticationConverter(JwtConverterProperties(clientId))
 
     @Bean
     fun securityWebFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
@@ -25,30 +32,9 @@ class AuthConfig(
             }
             .oauth2ResourceServer { oauth2 ->
                 oauth2.jwt { jwt ->
-                    jwt.jwtAuthenticationConverter(customAuthenticationConverter)
+                    jwt.jwtAuthenticationConverter(customAuthenticationConverter())
                 }
             }
             .build()
     }
-
-//    @Bean
-//    fun jwtAuthenticationConverter(): Converter<Jwt, Mono<AbstractAuthenticationToken>> {
-//        return Converter<Jwt, Mono<AbstractAuthenticationToken>> { jwt ->
-//            val roles = extractRoles(jwt)
-//            val principal = UserPrincipal(
-//                userId = jwt.subject,
-//                email = jwt.getClaim("email"),
-//                roles = roles
-//            )
-//            val authorities = roles.map { SimpleGrantedAuthority("ROLE_$it") }
-//            Mono.just(
-//                UsernamePasswordAuthenticationToken(
-//                    principal,
-//                    null,
-//                    authorities
-//                )
-//            )
-//        }
-//    }
-
 }
