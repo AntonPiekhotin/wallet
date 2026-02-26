@@ -42,11 +42,12 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:5.0.0")
     implementation("org.springframework.kafka:spring-kafka")
-
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
     implementation("com.tony.mywallet:common-jpa:1.0")
+    implementation("com.tony.mywallet:common-security:1.0")
 }
 
 kotlin {
