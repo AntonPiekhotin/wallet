@@ -6,6 +6,7 @@ object KafkaGroup {
     const val USER_SERVICE = "user-service"
     const val WALLET_SERVICE = "wallet-service"
     const val TRANSACTION_SERVICE = "transaction-service"
+    const val PAYMENT_GATEWAY_SERVICE = "payment-gateway-service"
 }
 
 object KafkaTopic {
@@ -13,7 +14,8 @@ object KafkaTopic {
     const val USER_CREATED = "auth.user.created.v1"
     const val USER_UPDATED = "auth.user.updated.v1"
     const val USER_DELETED = "auth.user.deleted.v1"
-    const val DEPOSIT = "tx.deposit.initiated.v1"
+    const val DEPOSIT_INITIATED = "tx.deposit.initiated.v1"
+    const val DEPOSIT_CAPTURED = "tx.deposit.captured.v1"
     const val WITHDRAWAL = "tx.withdrawal.initiated.v1"
     const val P2P_TRANSFER = "tx.p2p.transfer.initiated.v1"
 }

@@ -1,0 +1,9 @@
+server:
+  port: 9191
+
+spring:
+  application:
+    name: payment-gateway
+
+kafka:
+  bootstrap-servers: localhost:9092

@@ -1,5 +1,6 @@
 package com.tony.mywallet.transaction.model.entity
 
+import com.tony.common.model.constant.Currency
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -24,18 +25,22 @@ data class Transaction(
     @Column(nullable = false)
     val type: TransactionType,
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    val status: TransactionStatus,
+    var status: TransactionStatus,
 
     @Column(nullable = false)
     val amount: BigDecimal,
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    val currency: String,
+    val currency: Currency,
 
     val sourceWalletId: UUID? = null,
 
     val targetWalletId: UUID? = null,
+
+    var redirectUrl: String? = null,
 
     @CreationTimestamp
     val createdAt: LocalDateTime? = null,
@@ -49,5 +54,5 @@ enum class TransactionType {
 }
 
 enum class TransactionStatus {
-    PENDING, COMPLETED, FAILED
+    PENDING, REDIRECT, COMPLETED, FAILED
 }
