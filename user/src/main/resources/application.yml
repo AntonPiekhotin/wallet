@@ -33,3 +33,4 @@ kafka:
 logging:
   level:
     com.tony: DEBUG
+    org.springframework.security: DEBUG

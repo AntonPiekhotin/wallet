@@ -30,5 +30,9 @@ class ApiGatewayConfig(
                 it.path("/api/v1/user/**")
                     .uri("lb://user")
             }
+            .route("transaction") {
+                it.path("/api/v1/transaction/**")
+                    .uri("lb://transaction")
+            }
             .build()
 }

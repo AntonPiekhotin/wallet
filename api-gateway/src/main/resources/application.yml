@@ -28,5 +28,5 @@ eureka:
 logging:
   level:
     com.tony: DEBUG
-    security: DEBUG
+    org.springframework.security: DEBUG
     web: debug

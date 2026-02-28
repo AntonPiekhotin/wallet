@@ -33,15 +33,15 @@ data class Transaction(
     @Column(nullable = false)
     val currency: String,
 
-    val sourceWalletId: UUID?,
+    val sourceWalletId: UUID? = null,
 
-    val targetWalletId: UUID?,
+    val targetWalletId: UUID? = null,
 
     @CreationTimestamp
-    val createdAt: LocalDateTime,
+    val createdAt: LocalDateTime? = null,
 
     @UpdateTimestamp
-    val updatedAt: LocalDateTime
+    val updatedAt: LocalDateTime? = null,
 )
 
 enum class TransactionType {

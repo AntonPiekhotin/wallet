@@ -29,3 +29,8 @@ kafka:
 
 keycloak:
   client-id: mywallet-client
+
+logging:
+  level:
+    com.tony: DEBUG
+    org.springframework.security: DEBUG
