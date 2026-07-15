@@ -8,6 +8,6 @@ object WalletSagaBindings {
 
     val USER_CREATION = SagaBinding(
         SagaOperation.USER_CREATED,
-        WalletSagaContext.Creation::class.java
+        WalletSagaContext.UserCreation::class.java
     )
 }

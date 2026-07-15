@@ -46,6 +46,7 @@ dependencies {
     implementation("org.springframework.kafka:spring-kafka")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+    implementation("com.tony.mywallet:common:1.0")
     implementation("com.tony.mywallet:common-jpa:1.0")
     implementation("com.tony.mywallet:common-security:1.0")
 }

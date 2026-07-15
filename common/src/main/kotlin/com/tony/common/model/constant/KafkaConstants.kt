@@ -15,7 +15,8 @@ object KafkaTopic {
     const val USER_UPDATED = "auth.user.updated.v1"
     const val USER_DELETED = "auth.user.deleted.v1"
     const val DEPOSIT_INITIATED = "tx.deposit.initiated.v1"
-    const val DEPOSIT_CAPTURED = "tx.deposit.captured.v1"
     const val WITHDRAWAL = "tx.withdrawal.initiated.v1"
     const val P2P_TRANSFER = "tx.p2p.transfer.initiated.v1"
+    const val TRANSACTION_INITIATED = "tx.initiated.v1"
+    const val TRANSACTION_HANDLED = "tx.handled.v1"
 }

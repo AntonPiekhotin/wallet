@@ -15,7 +15,7 @@ abstract class KafkaEvent {
 
 abstract class SagaEvent : KafkaEvent() {
     abstract val sagaId: String
-    abstract val traceability: MutableMap<String, String>
+    abstract val traceability: MutableMap<String, String>?
     abstract val sagaOperation: SagaOperation
     val timestamp: LocalDateTime = LocalDateTime.now()
     override val key: String

@@ -1,6 +1,8 @@
 package com.tony.mywallet.transaction.model.entity
 
 import com.tony.common.model.constant.Currency
+import com.tony.common.model.constant.TransactionStatus
+import com.tony.common.model.constant.TransactionType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -48,11 +50,3 @@ data class Transaction(
     @UpdateTimestamp
     val updatedAt: LocalDateTime? = null,
 )
-
-enum class TransactionType {
-    DEPOSIT, WITHDRAWAL
-}
-
-enum class TransactionStatus {
-    PENDING, REDIRECT, COMPLETED, FAILED
-}

@@ -25,7 +25,7 @@ class TransactionController(
     @PostMapping("/deposit")
     @PreAuthorize("hasRole('USER')") //todo: check walletId ownership
     fun deposit(@RequestBody request: DepositRequestDto): Mono<ResponseEntity<DepositResponseDto>> =
-        transactionService.deposit(request)
+        transactionService.initiateDeposit(request)
             .map { ResponseEntity.ok(it) }
 
     @GetMapping("/{id}")

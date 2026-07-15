@@ -1,7 +1,7 @@
 package com.tony.mywallet.notification.input.event
 
-import com.tony.common.model.constant.KafkaConstants.Group.NOTIFICATION_SERVICE
-import com.tony.common.model.constant.KafkaConstants.Topic.USER_CREATED
+import com.tony.common.model.constant.KafkaGroup.NOTIFICATION_SERVICE
+import com.tony.common.model.constant.KafkaTopic.USER_CREATED
 import com.tony.common.model.event.UserCreatedEvent
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener

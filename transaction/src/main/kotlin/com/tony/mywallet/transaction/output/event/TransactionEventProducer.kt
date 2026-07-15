@@ -1,6 +1,9 @@
 package com.tony.mywallet.transaction.output.event
 
 import com.tony.common.model.event.KafkaEvent
+import com.tony.common.model.event.TransactionInitiatedEvent
+import com.tony.mywallet.transaction.model.dto.DepositRequestDto
+import com.tony.mywallet.transaction.model.entity.Transaction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.core.KafkaTemplate
@@ -12,7 +15,17 @@ class TransactionEventProducer(
 ) {
     private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
-    fun sendEvent(event: KafkaEvent) {
+    fun sendDepositInitiatedEvent(transaction: Transaction, request: DepositRequestDto) =
+        sendEvent(
+            TransactionInitiatedEvent.Deposit(
+                sagaId = transaction.sagaId,
+                transactionId = transaction.id,
+                targetWalletId = request.walletId,
+                amount = request.amount
+            )
+        )
+
+    private fun sendEvent(event: KafkaEvent) {
         kafkaTemplate.send(
             event.topic,
             event.key,

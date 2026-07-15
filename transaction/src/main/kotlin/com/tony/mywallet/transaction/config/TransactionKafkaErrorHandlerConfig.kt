@@ -1,7 +1,5 @@
 package com.tony.mywallet.transaction.config
 
-import com.tony.common.model.constant.SagaSource.WALLET_SOURCE
-import com.tony.common.model.event.SagaCompensationEvent
 import com.tony.common.model.event.UserCreatedEvent
 import com.tony.mywallet.transaction.output.event.TransactionEventProducer
 import org.springframework.context.annotation.Bean
@@ -19,17 +17,18 @@ class TransactionKafkaErrorHandlerConfig(
     fun errorHandler(): DefaultErrorHandler {
         val backOff = FixedBackOff(3000L, 3)
         val recoverer = ConsumerRecordRecoverer { consumerRecord, exception ->
-            val event = consumerRecord.value() as? UserCreatedEvent
+            val event = consumerRecord.value() as? UserCreatedEvent //todo: what is happening here???
             if (event != null) {
-                transactionEventProducer.sendEvent(
-                    SagaCompensationEvent(
-                        sagaId = event.sagaId,
-                        traceability = event.traceability,
-                        reason = "Exhausted retries: " + exception.cause?.message,
-                        sourceService = WALLET_SOURCE,
-                        sagaOperation = event.sagaOperation,
-                    )
-                )
+//                transactionEventProducer.sendEvent(
+//                    SagaCompensationEvent(
+//                        sagaId = event.sagaId,
+//                        traceability = event.traceability,
+//                        reason = "Exhausted retries: " + exception.cause?.message,
+//                        sourceService = WALLET_SOURCE,
+//                        sagaOperation = event.sagaOperation,
+//                    )
+//                )
+//                transactionEventProducer.sendCompensationEvent(event, exception)
             }
         }
         return DefaultErrorHandler(recoverer, backOff)

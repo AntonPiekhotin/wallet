@@ -2,8 +2,10 @@ package com.tony.mywallet.wallet.input.event
 
 import com.tony.common.model.constant.KafkaGroup.WALLET_SERVICE
 import com.tony.common.model.constant.KafkaTopic.COMPENSATION
+import com.tony.common.model.constant.KafkaTopic.TRANSACTION_HANDLED
 import com.tony.common.model.constant.KafkaTopic.USER_CREATED
 import com.tony.common.model.event.SagaCompensationEvent
+import com.tony.common.model.event.TransactionHandledEvent
 import com.tony.common.model.event.UserCreatedEvent
 import com.tony.common.saga.handler.CompensationHandler
 import com.tony.common.saga.handler.SagaDispatcher
@@ -33,8 +35,29 @@ class WalletEventConsumer(
     fun handleUserCreatedEvent(event: UserCreatedEvent, ack: Acknowledgment) {
         logger.info("Received UserCreatedEvent: $event")
         val wallet = walletService.createWallet(userId = UUID.fromString(event.userId))
-        sagaStore.saveContext(event.sagaId, event.sagaOperation, WalletSagaContext.Creation(wallet.id))
+        sagaStore.saveContext(event.sagaId, event.sagaOperation, WalletSagaContext.UserCreation(wallet.id))
         ack.acknowledge()
+    }
+
+    @KafkaListener(
+        topics = [TRANSACTION_HANDLED],
+        groupId = WALLET_SERVICE,
+        containerFactory = "kafkaListenerContainerFactory"
+    )
+    fun handleTransactionHandledEvent(event: TransactionHandledEvent, ack: Acknowledgment) = with(event) {
+        logger.info("Received TransactionHandledEvent: $event")
+        sagaStore.saveContext(
+            sagaId,
+            sagaOperation,
+            WalletSagaContext.TransactionHandled(
+                transactionId = transactionId,
+                status = status,
+                amount = amount,
+                type = transactionType
+            )
+        )
+        ack.acknowledge()
+        walletService.handleTransaction(event)
     }
 
     @KafkaListener(

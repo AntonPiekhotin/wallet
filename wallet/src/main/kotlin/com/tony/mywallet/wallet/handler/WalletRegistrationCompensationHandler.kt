@@ -12,11 +12,11 @@ import org.springframework.stereotype.Component
 class WalletRegistrationCompensationHandler(
     override val sagaStore: SagaStore,
     private val walletRepository: WalletRepository,
-) : AbstractCompensationHandler<WalletSagaContext.Creation>(
+) : AbstractCompensationHandler<WalletSagaContext.UserCreation>(
     WalletSagaBindings.USER_CREATION
 ) {
 
-    override fun compensate(event: SagaCompensationEvent, context: WalletSagaContext.Creation) {
+    override fun compensate(event: SagaCompensationEvent, context: WalletSagaContext.UserCreation) {
         logger.info("Rolling back wallet creation for walletId: ${context.walletId}")
         walletRepository.deleteById(context.walletId).also {
             logger.info(

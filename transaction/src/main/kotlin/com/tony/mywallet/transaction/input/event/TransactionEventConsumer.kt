@@ -2,9 +2,9 @@ package com.tony.mywallet.transaction.input.event
 
 import com.tony.common.model.constant.KafkaGroup.TRANSACTION_SERVICE
 import com.tony.common.model.constant.KafkaTopic.COMPENSATION
-import com.tony.common.model.constant.KafkaTopic.DEPOSIT_CAPTURED
+import com.tony.common.model.constant.KafkaTopic.TRANSACTION_HANDLED
 import com.tony.common.model.event.SagaCompensationEvent
-import com.tony.common.model.event.TransactionInitiatedEvent
+import com.tony.common.model.event.TransactionHandledEvent
 import com.tony.common.saga.handler.CompensationHandler
 import com.tony.common.saga.handler.SagaDispatcher
 import com.tony.mywallet.common.jpa.store.SagaStore
@@ -21,7 +21,7 @@ class TransactionEventConsumer(
     private val sagaStore: SagaStore
 ) {
     private val dispatcher = SagaDispatcher(handlers)
-    private val logger = LoggerFactory.getLogger(this::class.java)
+    private val logger = LoggerFactory.getLogger(javaClass)
 
     @KafkaListener(
         topics = [COMPENSATION],
@@ -38,13 +38,13 @@ class TransactionEventConsumer(
     }
 
     @KafkaListener(
-        topics = [DEPOSIT_CAPTURED],
+        topics = [TRANSACTION_HANDLED],
         groupId = TRANSACTION_SERVICE,
         containerFactory = "kafkaListenerContainerFactory",
     )
-    fun onDepositCaptured(event: TransactionInitiatedEvent.DepositCapturedEvent, ack: Acknowledgment) = with(event) {
+    fun onTransactionHandled(event: TransactionHandledEvent, ack: Acknowledgment) = with(event) {
         logger.info("Received deposit captured event: $this")
-        transactionService.handleDepositCaptured(this)
+        transactionService.handleTransaction(this)
         ack.acknowledge()
     }
 }

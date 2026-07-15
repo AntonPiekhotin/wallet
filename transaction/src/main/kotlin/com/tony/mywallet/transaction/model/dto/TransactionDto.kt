@@ -1,8 +1,8 @@
 package com.tony.mywallet.transaction.model.dto
 
 import com.tony.common.model.constant.Currency
-import com.tony.mywallet.transaction.model.entity.TransactionStatus
-import com.tony.mywallet.transaction.model.entity.TransactionType
+import com.tony.common.model.constant.TransactionStatus
+import com.tony.common.model.constant.TransactionType
 import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.UUID
