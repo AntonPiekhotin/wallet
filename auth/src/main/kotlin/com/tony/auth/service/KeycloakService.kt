@@ -16,6 +16,7 @@ import java.util.*
 import org.keycloak.admin.client.CreatedResponseUtil
 import org.keycloak.admin.client.Keycloak
 import org.keycloak.representations.idm.UserRepresentation
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
@@ -42,6 +43,7 @@ class KeycloakService(
     private val eventProducer: AuthEventProducer
 ) {
 
+    private val logger = LoggerFactory.getLogger(javaClass)
     private val tokenUrl = "${props.url}/realms/${props.realm}/protocol/openid-connect/token"
     private val logoutUrl = "${props.url}/realms/${props.realm}/protocol/openid-connect/logout"
 
@@ -59,8 +61,26 @@ class KeycloakService(
             processError(response)
         }
         val userId = CreatedResponseUtil.getCreatedId(response)
-        assignClientRole(userId)
-        sendUserCreatedEvent(userId, user)
+        try {
+            assignClientRole(userId)
+            sendUserCreatedEvent(userId, user)
+        } catch (ex: Exception) {
+            rollbackUserCreation(userId, ex)
+        }
+    }
+
+    private fun rollbackUserCreation(userId: String, cause: Exception): Nothing {
+        logger.error("Registration failed after user $userId was created, rolling back", cause)
+        try {
+            deleteUser(userId)
+        } catch (rollbackEx: Exception) {
+            logger.error("Rollback failed: could not delete orphaned user $userId", rollbackEx)
+        }
+        throw MyWalletException(
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            "Failed to register user: ${cause.message}",
+            cause
+        )
     }
 
     private fun sendUserCreatedEvent(userId: String, user: UserRepresentation) {
